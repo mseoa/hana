@@ -1,3 +1,6 @@
 *.local
 node_modules
+#/node_modules .git이 있는 폴더의 해당명 파일만 무시하겠다
 tmp
+ppp.txt
+#./ppp.txt
