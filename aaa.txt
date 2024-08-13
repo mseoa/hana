@@ -1,1 +1,2 @@
 A A A
+stash apply
