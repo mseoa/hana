@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tailwind Playgroud</title>
+    <link rel="stylesheet" href="../dist/output.css" />
+  </head>
+  <body>
+    <div
+      class="h-36 items-stretch hover:items-center flex mb-3 flex-row flex-wrap gap-2 justify-around flex-auto"
+    >
+      <div class="basis-1/2 bg-red-300">111</div>
+      <div class="bg-orange-300 basis-1/4">222</div>
+      <div class="bg-yellow-300 basis-1/4">333</div>
+      <div class="bg-green-300">444</div>
+      <div class="bg-blue-300">555</div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3">
+      <div class="w-32 bg-red-300 order-2">111</div>
+      <div class="w-32 bg-orange-300 order-1">222</div>
+      <div class="w-32 bg-yellow-300 order-3">333</div>
+      <div class="w-32 bg-green-300 order-4">444</div>
+      <div class="w-32 bg-blue-300 order-5">555</div>
+    </div>
+
+    <div class="m-3 P-3">
+      <button class="btn">btn</button>
+      <button class="btn-primary">BtnPrimary</button>
+      <button class="btn-danger">BtnDanger</button>
+      <button class="btn-success">BtnSuccess</button>
+    </div>
+
+    <div
+      class="containterx mx-autox h-lvh w-full min-w-full bg-no-repeat bg-cover"
+      style="
+        background-image: url(https://cdn.pixabay.com/photo/2024/02/21/15/09/plant-8587893_1280.jpg);
+      "
+      ;
+    >
+      <h1
+        class="text-4xl text-white hover:text-black font-extrabold underline underline-offset-8 bg-primary"
+      >
+        Title
+      </h1>
+
+      <div class="text-3xl w-full text-ellipsis overflow-hidden text-nowrap">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat, eaque
+        omnis sequi recusandae quod minus labore ut voluptate assumenda, ab ad,
+        quas dolorum maiores praesentium minima totam voluptas quos repellendus?
+      </div>
+      <ul class="border border-red-300 p-3 m-3">
+        <li class="text-blue-500 first:bg-red-500">111</li>
+        <li class="text-green-500 first:bg-red-500">222</li>
+        <li class="text-gray-500 last:bg-blue-500">333</li>
+        <li>444</li>
+      </ul>
+      <div
+        class="bg-gradient-to-b via-black from-slate-300 to-blue-300 h-96 text-center"
+      >
+        <button
+          class="w-96 h-36 bg-green-300 hover:bg-green-200 transition-colors duration-700 delay-300 hover:animate-pulse"
+        >
+          Animation
+        </button>
+        <button
+          class="mt-5 w-96 h-36 bg-green-300 hover:bg-green-200 translate-x-4 skew-y-3"
+        >
+          Animation
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
