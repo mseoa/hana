@@ -1,4 +1,4 @@
-const assert = require("assert");
+import assert from 'assert';
 
 /** 모든 Array가 다음 기능을 갖도록 구현하세요.
 1) mapBy(), findBy(), filterBy(), rejectBy(), sortBy()

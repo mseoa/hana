@@ -1,7 +1,7 @@
 /**다음과 같은 push, pop, shift, unshift 를 순수 함수로 작성하시오.
 (단, 입력값은 다음 예시로 한정함)
 */
-const assert = require("assert");
+import assert from 'assert';
 
 function push(array, ...args) {
   return array.concat(args);

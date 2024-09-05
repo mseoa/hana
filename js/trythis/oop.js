@@ -49,7 +49,7 @@ hong.fullName = 'Lee';
 console.log(hong.firstName, hong.lastName);  // 'Kildong LEE' 출력하면 통과!
  */
 
-const assert = require("assert");
+import assert from 'assert';
 
 class Emp {
   firstName;
