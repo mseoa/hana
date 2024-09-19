@@ -1,0 +1,9 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" }, // ws에 관한 것
+    { "path": "./tsconfig.node.json" } // was에 관한 것
+  ]
+}
+
+// NOTE: REACT client component랑 server component가 있음. server component는 was에서 실행. ws는 dist만 주고 wass
