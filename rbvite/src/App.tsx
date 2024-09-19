@@ -8,6 +8,9 @@ function App() {
   return (
     <>
       <h1>rbvite</h1>
+      <div>
+        <Hello />
+      </div>
       <div className='card'>
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
