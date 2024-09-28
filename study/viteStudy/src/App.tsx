@@ -19,7 +19,17 @@ function App() {
   const [count, setCount] = useState(0);
   const [session, setSession] = useState<Session>(SampleSession);
 
-  const plusCount = () => setCount(count + 1); // setCount를 직접 전달하면 side effect가 발생할 수 있음
+  const plusCount = () => {
+    setCount(count + 1);
+    // setCount((count) => count + 1);
+    const cnt = document.getElementById('cnt');
+    console.log('count======>', count, cnt?.innerText);
+    setTimeout(() => {
+      console.log('>>>>======>', count, cnt?.innerText);
+    }, 17); //17ms가 지나도 virtual DOM이 변경되지 않아서 count는 변경되지 않음.
+    // DOM이 상태값보다 먼저 변경되었다는 것을 알 수 있음
+    //16ms가 지나 rerendering이 발생해서 DOM은 먼저 그려졌고 상태값은 아직 변경되지 않았음
+  }; // setCount를 직접 전달하면 side effect가 발생할 수 있음
   const minusCount = () => setCount(count - 1);
 
   const logout = () => setSession({ ...session, loginUser: null }); // 리액트는 객체의 주소값(참조)이 바뀌었을 때만 "어, 뭔가 변경됐구나!" 하고 인식해서 다시 렌더링을 해줍니다.
@@ -39,7 +49,7 @@ function App() {
     });
 
   return (
-    <div className='flex flex-col items-center mt-5'>
+    <div className='mt-5 flex flex-col items-center'>
       <h1>Vite Study (App)</h1>
       <pre>{JSON.stringify(session.loginUser)}</pre>
       <div className='card'>
@@ -65,7 +75,12 @@ function App() {
         minusCount={minusCount}
       />
       <hr />
-      <My session={session} logout={logout} login={login} removeCartItem={removeCartItem}/>
+      <My
+        session={session}
+        logout={logout}
+        login={login}
+        removeCartItem={removeCartItem}
+      />
     </div>
   );
 }

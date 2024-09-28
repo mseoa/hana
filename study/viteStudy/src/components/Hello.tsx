@@ -44,7 +44,7 @@ export default function Hello({
   //   console.debug('********', v, myState);
 
   return (
-    <div className='border border-slate-300 p-3 my-5'>
+    <div className='my-5 border border-slate-300 p-3'>
       <Title text='(Hello) Hi~' name={name} />
       <Body>
         This is Hello Body Component. {v} - {myState} - {age}
@@ -60,8 +60,12 @@ export default function Hello({
       >
         Hello!
       </button>
-      <strong className='mx-5'>{count}</strong>
-      <button onClick={() => minusCount()} className='btn btn-danger'>Minus</button>
+      <strong id='cnt' className='mx-5'>
+        {count}
+      </strong>
+      <button onClick={() => minusCount()} className='btn btn-danger'>
+        Minus
+      </button>
     </div>
   );
 }
