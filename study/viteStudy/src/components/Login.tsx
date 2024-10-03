@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import Button from './atoms/Button';
 import LabelInput from './molecules/LabelInput';
 
@@ -7,17 +7,17 @@ export default function Login({
 }: {
   login(id: number, name: string): void;
 }) {
-    const [id, setId] = useState(0); // 정답은 useRef
-    const [name, setName] = useState('');
+  const [id, setId] = useState(0); // 정답은 useRef
+  const [name, setName] = useState('');
   //   console.log(id); // useState쓰면 id가 바뀔때마다 렌더링돼서 cpu에 부담이 될 수 있음
   // 그래서 useRef를 씀
 
   const signIn = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!id || !name) {
-        alert('ID와 Name을 입력해주세요.');
-        return;
-      }
+      alert('ID와 Name을 입력해주세요.');
+      return;
+    }
     /**
     const elements = e.currentTarget.elements; // currentTarget은 form
     const { id, name } = elements as typeof elements & {
@@ -33,12 +33,21 @@ export default function Login({
     login(+id.value, name.value);
      */
     login(id, name);
-};
+  };
+
+  const changeName = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.currentTarget.value);
+  };
   return (
     <>
       <form onSubmit={signIn} className='border p-4'>
-        <LabelInput label='ID' type='number' classNames='mb-3' onChange={(e)=>setId(+e.currentTarget.value)}/>
-        <LabelInput label='Name' classNames='mb-3' onChange={(e)=>setName(e.currentTarget.value)}/>
+        <LabelInput
+          label='ID'
+          type='number'
+          classNames='mb-3'
+          onChange={(e) => setId(+e.currentTarget.value)}
+        />
+        <LabelInput label='Name' classNames='mb-3' onChange={changeName} />
         {/* <div className='flex'>
         <label htmlFor="id" className='w-24'>ID:</label>
         <input
@@ -61,7 +70,11 @@ export default function Login({
         />
               </div> */}
         {/* <button className='btn btn-success float-end mt-3'>Sign in</button> */}
-      <Button text='Sign in' variant='btn-success' classNames='float-end mt-3' />
+        <Button
+          text='Sign in'
+          variant='btn-success'
+          classNames='float-end mt-3'
+        />
       </form>
     </>
   );
