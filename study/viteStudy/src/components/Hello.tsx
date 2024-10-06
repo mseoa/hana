@@ -1,8 +1,19 @@
-import { ReactNode, useState } from 'react';
+import {
+  ForwardedRef,
+  ReactNode,
+  forwardRef,
+  useImperativeHandle,
+  useState,
+} from 'react';
+import { useCounter } from '../hooks/counter-hook';
+import { useSession } from '../hooks/session-context';
+import { useFetch } from '../hooks/fetch-hook';
+import { RiH3 } from 'react-icons/ri';
+import { FaSpinner } from 'react-icons/fa6';
 
 type TitleProps = {
   text: string;
-  name: string;
+  name?: string;
 };
 
 const Title = ({ text, name }: TitleProps) => {
@@ -24,30 +35,70 @@ const Body = ({ children }: { children: ReactNode }) => {
 };
 
 type Props = {
-  name: string;
-  age: number;
-  count: number;
-  plusCount: () => void;
-  minusCount: () => void;
+  friend: number;
 };
 
-export default function Hello({
-  name,
-  age,
-  count,
-  plusCount,
-  minusCount,
-}: Props) {
+export type MyHandler = {
+  jumpHelloState: () => void;
+};
+
+type PlaceUser = {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+};
+
+function Hello({ friend }: Props, ref: ForwardedRef<MyHandler>) {
   //   const [myState, setMyState] = useState(() => new Date().getTime());
+  const {
+    session: { loginUser },
+  } = useSession();
+  const { count, plusCount, minusCount } = useCounter();
   const [myState, setMyState] = useState(0);
   let v = 1;
   //   console.debug('********', v, myState);
 
+  //useImperativeHandle
+  const handler: MyHandler = {
+    jumpHelloState: () => setMyState((pre) => pre * 10),
+  };
+
+  useImperativeHandle(ref, () => handler);
+
+  const {
+    data: friendInfo,
+    isLoading,
+    error,
+  } = useFetch<PlaceUser>(
+    `https://jsonplaceholder.typicode.com/users/${friend}`,
+    true,
+    [friend]
+  );
+
   return (
-    <div className='my-5 border border-slate-300 p-3'>
-      <Title text='(Hello) Hi~' name={name} />
+    <div className='my-5 w-2/3 border border-slate-300 p-3 text-center'>
+      <Title text='(Hello) Hi~' name={loginUser?.name} />
       <Body>
-        This is Hello Body Component. {v} - {myState} - {age}
+        <h3 className='text-center text-2xl'>myState: {myState}</h3>
+        {isLoading ? (
+          <h3 className='flex justify-center'>
+            <FaSpinner size={20} className='animate-spin text-slate-500' />
+          </h3>
+        ) : error ? (
+          <strong className='text-red-500'>
+            {error.message && error.message.startsWith('404')
+              ? `Your friend is not found ${friend}`
+              : error.message}
+          </strong>
+        ) : (
+          <strong>
+            My friend is {friendInfo?.id}. {friendInfo?.name}.
+          </strong>
+        )}
+        <p>
+          {v} - {friend}
+        </p>
       </Body>
       <button
         onClick={() => {
@@ -69,3 +120,7 @@ export default function Hello({
     </div>
   );
 }
+
+const ImperativeHello = forwardRef(Hello);
+
+export default ImperativeHello;

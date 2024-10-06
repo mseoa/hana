@@ -1,9 +1,23 @@
-type Props = {
-    text: string;
-    variant: string;
-    classNames: string;
-    }
+import { ButtonHTMLAttributes, PropsWithChildren } from 'react';
 
-export default function Button({text, variant='', classNames=''}: Props) {
-return <button className={`btn ${variant} ${classNames}`}>{text}</button>
+type Props = {
+  // text: string | JSX.Element;
+  variant?: string;
+  classNames?: string;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
+export default function Button({
+  children,
+  variant = '',
+  classNames = '',
+  ...props
+}: PropsWithChildren<Props>) {
+  return (
+    <button
+      {...props}
+      className={`btn ${variant} ${classNames} inline-flex items-center gap-1 normal-case`}
+    >
+      {children}
+    </button>
+  );
 }
