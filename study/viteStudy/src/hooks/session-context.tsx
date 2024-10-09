@@ -5,10 +5,10 @@ import {
   useContext,
   useLayoutEffect,
   useRef,
-  useState,
 } from 'react';
 import { LoginHandler } from '../components/Login';
 import { useFetch } from './fetch-hook';
+import { useMyReducer } from '../libs/my-uses';
 
 // const SampleSession = {
 //   loginUser: { id: 1, name: 'Hong' },
@@ -19,8 +19,10 @@ import { useFetch } from './fetch-hook';
 //   ],
 // };
 
-const SampleSession = {
-  loginUser: null,
+const SKEY = 'SESSION1';
+
+const SampleSession: Session = {
+  loginUser: { id: 0, name: '' },
   cart: [],
 };
 
@@ -48,13 +50,89 @@ type SessionContextProps = Omit<typeof contextInitValue, 'session'> & {
   session: Session;
 };
 
+type Action =
+  | { type: 'initialize'; payload: Session }
+  | {
+      type: 'login';
+      payload: LoginUser;
+    }
+  | {
+      type: 'logout';
+      payload: null;
+    }
+  | {
+      type: 'addCartItem';
+      payload: CartItem;
+    }
+  | {
+      type: 'removeCartItem';
+      payload: number;
+    }
+  | {
+      type: 'editCartItem';
+      payload: CartItem;
+    };
+
+const reducer = (session: Session, { type, payload }: Action) => {
+  let sess: Session;
+  switch (type) {
+    case 'initialize':
+      return payload;
+    case 'login':
+      return { ...session, loginUser: payload };
+    case 'logout':
+      return { ...session, loginUser: null };
+    case 'addCartItem':
+      sess = { ...session, cart: [...session.cart, payload] };
+      break;
+    case 'removeCartItem':
+      sess = {
+        ...session,
+        cart: session.cart.filter(({ id }) => id !== payload),
+      };
+      break;
+    case 'editCartItem':
+      sess = {
+        ...session,
+        cart: session.cart.map((oldItem) =>
+          oldItem.id === payload.id ? payload : oldItem
+        ),
+      };
+      break;
+    default:
+      return session;
+  }
+
+  if (sess) {
+    localStorage.setItem(SKEY, JSON.stringify(sess.cart));
+  }
+  return sess;
+};
+
 const SessionContext = createContext<SessionContextProps>(contextInitValue);
 
 export const SessionProvider = ({ children }: PropsWithChildren) => {
-  const [session, setSession] = useState<Session>(SampleSession);
+  // const [session, setSession] = useState<Session>(SampleSession);
+  // useReducer
+  const [session, dispatch] = useMyReducer(reducer, SampleSession);
 
   // useImperativeHandle
   const loginRef = useRef<LoginHandler>(null);
+
+  const { data } = useFetch<Session>('/data/sample.json', true);
+  useLayoutEffect(() => {
+    const loginUser = JSON.parse(
+      sessionStorage.getItem(SKEY) || 'null'
+    ) as LoginUser;
+    const cart = JSON.parse(localStorage.getItem(SKEY) || 'null') as CartItem[];
+
+    const savedData = loginUser && cart ? { loginUser, cart } : null;
+
+    dispatch({
+      type: 'initialize',
+      payload: savedData || data || SampleSession,
+    });
+  }, [data, dispatch]);
 
   /** counter-hook.tsx
   const plusCount = () => {
@@ -71,13 +149,18 @@ export const SessionProvider = ({ children }: PropsWithChildren) => {
   const minusCount = () => setCount(count - 1);
   */
 
-  const logout = () => setSession({ ...session, loginUser: null }); // 리액트는 객체의 주소값(참조)이 바뀌었을 때만 "어, 뭔가 변경됐구나!" 하고 인식해서 다시 렌더링을 해줍니다.
+  // const logout = () => setSession({ ...session, loginUser: null }); // 리액트는 객체의 주소값(참조)이 바뀌었을 때만 "어, 뭔가 변경됐구나!" 하고 인식해서 다시 렌더링을 해줍니다.
+  const logout = () => {
+    dispatch({ type: 'logout', payload: null });
+    sessionStorage.removeItem(SKEY);
+  };
   // 위에처럼 하는게 순수함수인 이유는 session을 직접 변경하지 않고 새로운 객체를 만들어서 변경하기 때문
   // const logout = () => {
   //   session.loginUser = null;
   //   // setSession(session); // 이렇게해도 주소값이 바뀌지 않아서 인식을 못함
   // }; // session의 주소가 안바껴서 virtual DOM이 변경을 인식하지 못함
   // // session의 주소를 바꾸는거는 setSession를 사용해야함
+
   const login = (id: number, name: string) => {
     if (!id) {
       alert('ID를 입력해주세요.');
@@ -87,31 +170,29 @@ export const SessionProvider = ({ children }: PropsWithChildren) => {
       alert('Name을 입력해주세요.');
       return loginRef.current?.focus('name');
     }
-    setSession({ ...session, loginUser: { id, name } });
+    sessionStorage.setItem(SKEY, JSON.stringify({ id, name }));
+    dispatch({ type: 'login', payload: { id, name } });
+    // setSession({ ...session, loginUser: { id, name } });
   };
 
   const addCartItem = (name: string, price: number) => {
     const id = Math.max(...session.cart.map(({ id }) => id), 0) + 1;
-    setSession({ ...session, cart: [...session.cart, { id, name, price }] });
+    // setSession({ ...session, cart: [...session.cart, { id, name, price }] });
+    dispatch({ type: 'addCartItem', payload: { id, name, price } });
   };
 
   const removeCartItem = (id: number) =>
-    setSession({
-      ...session,
-      cart: session.cart.filter((item) => item.id !== id),
+    dispatch({
+      type: 'removeCartItem',
+      payload: id,
     });
 
   const editCartItem = (item: CartItem) => {
-    setSession({
-      ...session,
-      cart: session.cart.map((oldItem) =>
-        oldItem.id === item.id ? item : oldItem
-      ),
+    dispatch({
+      type: 'editCartItem',
+      payload: item,
     });
   };
-
-  const { data } = useFetch<Session>('/data/sample.json', true);
-  useLayoutEffect(() => setSession(data || SampleSession), [data]);
 
   return (
     <SessionContext.Provider

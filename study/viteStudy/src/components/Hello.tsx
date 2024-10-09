@@ -3,13 +3,16 @@ import {
   ReactNode,
   forwardRef,
   useImperativeHandle,
+  useReducer,
   useState,
+  useTransition,
 } from 'react';
 import { useCounter } from '../hooks/counter-hook';
 import { useSession } from '../hooks/session-context';
 import { useFetch } from '../hooks/fetch-hook';
-import { RiH3 } from 'react-icons/ri';
 import { FaSpinner } from 'react-icons/fa6';
+import { useMyReducer, useMyState } from '../libs/my-uses';
+import Button from './atoms/Button';
 
 type TitleProps = {
   text: string;
@@ -55,8 +58,15 @@ function Hello({ friend }: Props, ref: ForwardedRef<MyHandler>) {
     session: { loginUser },
   } = useSession();
   const { count, plusCount, minusCount } = useCounter();
-  const [myState, setMyState] = useState(0);
+  // const [myState, setMyState] = useState(0);
+
+  const [p, dispatchP] = useReducer((pre) => pre + 10, 0);
+  const [q, dispatchQ] = useMyReducer((pre) => pre + 10, 0);
+  const [myState, setMyState] = useMyState(0);
   let v = 1;
+
+  const [isPending, startTransition] = useTransition();
+  const [arr, setArr] = useState<{ id: number }[]>([]);
   //   console.debug('********', v, myState);
 
   //useImperativeHandle
@@ -79,6 +89,10 @@ function Hello({ friend }: Props, ref: ForwardedRef<MyHandler>) {
   return (
     <div className='my-5 w-2/3 border border-slate-300 p-3 text-center'>
       <Title text='(Hello) Hi~' name={loginUser?.name} />
+      p: {p}
+      <Button onClick={dispatchP}>PPP</Button>
+      q: {q}
+      <Button onClick={dispatchQ}>PPP</Button>
       <Body>
         <h3 className='text-center text-2xl'>myState: {myState}</h3>
         {isLoading ? (
@@ -106,6 +120,13 @@ function Hello({ friend }: Props, ref: ForwardedRef<MyHandler>) {
           setMyState(myState + 1);
           plusCount();
           // console.log('v/myState=', v, myState);
+          startTransition(() => {
+            // 브라우저의 메인스레드가 아니라 다른 스레드에서 실행해라
+            const newArr = Array.from({ length: 40000 }, (_, i) => ({
+              id: i + myState,
+            }));
+            setArr(newArr);
+          });
         }}
         className='btn'
       >
@@ -117,6 +138,15 @@ function Hello({ friend }: Props, ref: ForwardedRef<MyHandler>) {
       <button onClick={() => minusCount()} className='btn btn-danger'>
         Minus
       </button>
+      {isPending ? (
+        <FaSpinner className='animate-spin' />
+      ) : (
+        <ul>
+          {arr.map((a) => (
+            <li key={a.id}>{a.id}</li>
+          ))}{' '}
+        </ul>
+      )}
     </div>
   );
 }

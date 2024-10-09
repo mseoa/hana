@@ -2,7 +2,7 @@ import Login from './Login';
 import Profile from './Profile';
 import { FaPlus } from 'react-icons/fa6';
 import Button from './atoms/Button';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useCounter } from '../hooks/counter-hook';
 import { useSession } from '../hooks/session-context';
 import Item from './Item';
@@ -26,7 +26,8 @@ export default function My() {
 
   // const [isAdding, setIsAdding] = useState(false);
   // const toggleAdding = () => setIsAdding((prev) => !prev);
-  const [isAdding, toggleAdding] = useToggle();
+  // const [isAdding, toggleAdding] = useToggle();
+  const [isAdding, toggleAdding] = useReducer((prev) => !prev, false);
 
   const [, toggleSearch] = useToggle();
   const searchRef = useRef<HTMLInputElement>(null);
@@ -51,8 +52,23 @@ export default function My() {
   }, [totalPrice]);
 
   useLayoutEffect(() => {
-    console.log('$$$$$$$$$$$$$');
+    // console.log('$$$$$$$$$$$$$');
   }, [totalPrice]);
+
+  // 높이에 따른 처리하고 싶을때
+  const [ulHeight, setUlHeight] = useState(0);
+  // const ulCbRef = useCallback(
+  //   (node: HTMLUListElement) => {
+  //     console.log('node>>>>', node);
+  //     setUlHeight(node?.clientHeight);
+  //   },
+  //   [session.cart.length]
+  // );
+
+  const ulCbRef = (node: HTMLUListElement) => {
+    // console.log('node>>>>', node);
+    setUlHeight(node?.clientHeight);
+  };
 
   // 계속 바뀌는 데이터는 asset에 두고
   // 고정 데이터는 public에 둔다. 왜냐하면 public은 파일명이 바뀌지 않는 이상 캐시가 되기 때문이다.
@@ -101,7 +117,7 @@ export default function My() {
             placeholder='아이템 검색...'
           />
         </div>
-        <ul className='my-3 border px-3'>
+        <ul ref={ulCbRef} className='my-3 border px-3'>
           {session.cart.length ? (
             session.cart
               .filter(({ name }) => name.includes(searchStr))
@@ -134,6 +150,7 @@ export default function My() {
         <span>
           <strong>*할인: {dcPrice.toFixed(0).toLocaleString()}원</strong>
         </span>
+        <span>높이: {ulHeight}</span>
       </div>
     </>
   );

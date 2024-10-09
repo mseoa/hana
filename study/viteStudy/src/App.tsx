@@ -1,10 +1,31 @@
-import { useRef, useState } from 'react';
+import { memo, useReducer, useRef, useState } from 'react';
 import Hello, { MyHandler } from './components/Hello';
 import My from './components/My';
 // import { useCounter } from './hooks/counter-hook';
 import { SessionProvider } from './hooks/session-context';
 import useToggle from './hooks/toggle';
 import { useDebounce } from './hooks/timer-hooks';
+import Button from './components/atoms/Button';
+
+const ColorTitle = ({
+  color,
+  backgroundColor,
+}: {
+  color: string;
+  backgroundColor: string;
+}) => {
+  console.log('@@@ColorTitle', color);
+  return (
+    <h1 className='text-2xl' style={{ color, backgroundColor }}>
+      MEMO
+    </h1>
+  );
+};
+
+const MemoedColorTitle = memo(
+  ColorTitle,
+  ({ color: prev }, { color: curr }) => prev === curr
+);
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -12,6 +33,8 @@ function App() {
   const [friend, setFriend] = useState(10);
   const [, toggleRerender] = useToggle();
   const myHandleRef = useRef<MyHandler>(null); // ref의 current가 가질 타입, 자식이 아직 안그려졌으면 핸들러가 없을 수 있음
+
+  const [color, changeColor] = useReducer(() => 'blue', 'red');
 
   const friendRef = useRef<HTMLInputElement>(null);
   useDebounce(
@@ -26,6 +49,8 @@ function App() {
   return (
     <div className='flex flex-col items-center'>
       <h1>Vite Study (App)</h1>
+      <MemoedColorTitle color='white' backgroundColor={color} />
+      <Button onClick={changeColor}>Change Color</Button>
       {/* <pre>{JSON.stringify(session.loginUser)}</pre>
       <div className='card'>
         <button

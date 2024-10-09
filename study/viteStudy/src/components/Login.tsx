@@ -10,6 +10,7 @@ export type LoginHandler = {
 };
 
 export default function Login() {
+  console.log('Login render');
   const { login, loginRef } = useSession();
   const { count, plusCount, minusCount } = useCounter();
   // const [id, setId] = useState(0); // 정답은 useRef
