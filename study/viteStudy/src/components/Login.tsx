@@ -117,7 +117,7 @@ export default function Login() {
 
   return (
     <>
-      <form onSubmit={signIn} className='border p-4'>
+      <form onSubmit={signIn} className='p-4'>
         <LabelInput
           label='ID'
           type='number'

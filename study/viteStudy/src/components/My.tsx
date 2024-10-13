@@ -9,6 +9,8 @@ import Item from './Item';
 import useToggle from '../hooks/toggle';
 import { FaSearch } from 'react-icons/fa';
 import { useDebounce } from '../hooks/timer-hooks';
+import styles from './My.module.css';
+import clsx from 'clsx';
 
 // type Props = {
 //   session: Session;
@@ -88,26 +90,33 @@ export default function My() {
   return (
     <>
       <h1>(My)</h1>
-      {session.loginUser ? (
-        <div className='flex gap-5'>
-          <Profile ref={logoutButtonRef} />
-          <Button
-            onClick={() => logoutButtonRef.current?.focus()}
-            className='whitespace-pre-wrap'
-          >
-            <>
-              Profile 상위인
-              <br />
-              My에서 SignOut
-            </>
-          </Button>
-        </div>
-      ) : (
-        <Login />
-      )}
+      <div
+        className={clsx(
+          !session.loginUser && 'border-2 border-red-500',
+          'rounded-md'
+        )}
+      >
+        {session.loginUser ? (
+          <div className='flex gap-5'>
+            <Profile ref={logoutButtonRef} />
+            <Button
+              onClick={() => logoutButtonRef.current?.focus()}
+              className='whitespace-pre-wrap'
+            >
+              <>
+                Profile 상위인
+                <br />
+                My에서 SignOut
+              </>
+            </Button>
+          </div>
+        ) : (
+          <Login />
+        )}
+      </div>
       <div className='w-2/3 border p-3'>
         <div className='flex items-center gap-2'>
-          <FaSearch />
+          <FaSearch className={`${styles.xx}`} />
           <input
             // onChange={(e) => setSearchStr(e.currentTarget.value)}
             onChange={toggleSearch}

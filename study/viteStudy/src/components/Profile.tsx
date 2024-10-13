@@ -6,7 +6,7 @@ const Profile = forwardRef(
     const { session, logout } = useSession();
     return (
       <>
-        <div className='mb-3 border px-5 py-2'>
+        <div className='mb-3 px-5 py-2'>
           <h1>{session.loginUser?.name}이 로그인했습니다.(My)</h1>
           <button
             onClick={logout}

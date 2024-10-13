@@ -13,6 +13,9 @@ import { useFetch } from '../hooks/fetch-hook';
 import { FaSpinner } from 'react-icons/fa6';
 import { useMyReducer, useMyState } from '../libs/my-uses';
 import Button from './atoms/Button';
+import useToggle from '../hooks/toggle';
+import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 type TitleProps = {
   text: string;
@@ -60,8 +63,9 @@ function Hello({ friend }: Props, ref: ForwardedRef<MyHandler>) {
   const { count, plusCount, minusCount } = useCounter();
   // const [myState, setMyState] = useState(0);
 
+  const [isPStrong, togglePStrong] = useToggle(false);
   const [p, dispatchP] = useReducer((pre) => pre + 10, 0);
-  const [q, dispatchQ] = useMyReducer((pre) => pre + 10, 0);
+  const [q, dispatchQ] = useMyReducer((pre) => pre + 1, 0);
   const [myState, setMyState] = useMyState(0);
   let v = 1;
 
@@ -85,14 +89,37 @@ function Hello({ friend }: Props, ref: ForwardedRef<MyHandler>) {
     true,
     [friend]
   );
-
+  //NOTE: clsx 안됨
   return (
     <div className='my-5 w-2/3 border border-slate-300 p-3 text-center'>
       <Title text='(Hello) Hi~' name={loginUser?.name} />
-      p: {p}
-      <Button onClick={dispatchP}>PPP</Button>
-      q: {q}
-      <Button onClick={dispatchQ}>PPP</Button>
+      <span className={clsx('text-4xl', isPStrong && 'text-blue-500')}>
+        p: {p}
+      </span>
+      <span
+        className={clsx({
+          [twMerge(`pr-5 px-${q} pl-${q + 1} text-${q}xl`)]: true,
+          'text-blue-500': !isPStrong,
+        })}
+      >
+        q: {q}
+      </span>
+      <Button
+        onClick={() => {
+          dispatchP();
+          togglePStrong(true);
+        }}
+      >
+        PPP
+      </Button>
+      <Button
+        onClick={() => {
+          dispatchQ(null);
+          togglePStrong(false);
+        }}
+      >
+        QQQ
+      </Button>
       <Body>
         <h3 className='text-center text-2xl'>myState: {myState}</h3>
         {isLoading ? (
