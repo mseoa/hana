@@ -1,0 +1,6 @@
+라우터 타입:
+browser router- 웹의 모든 라우터, 주소창이 제일 깔끔
+hash router - #about같이 #붙는 애들, html에 아이디가 해당 위치인 곳으로 이동하는 특성에 따라
+home, login 이런식으로 div를 씌워준다
+memory router- 주소창에 안보여, 메모리 상
+native router - rn (react-router-native 설치)
