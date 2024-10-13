@@ -1,0 +1,43 @@
+라우터 타입:
+browser router- 웹의 모든 라우터, 주소창이 제일 깔끔
+hash router - #about같이 #붙는 애들, html에 아이디가 해당 위치인 곳으로 이동하는 특성에 따라
+home, login 이런식으로 div를 씌워준다
+memory router- 주소창에 안보여, 메모리 상
+native router - rn (react-router-native 설치)
+
+npm i pnpm -g
+pnpm dlx create-next-app@latest
+yyynyn
+pnpm build
+pnpm start
+
+
+
+package.json
+scripts -> d: "next dev --turbo"
+yarn dev
+yarn d
+
+
+
+.next -> next의 dist folder
+rm -rf .next -> 수정한 소스가 잘 반영이 안될때
+
+package.json에 type:modules가 없는데 esm 쓰려고 하면 mjs로 확장자 사용
+
+redirect = 주소창이 바뀌는것. 서버에서 c로 가라고함. 고객들은 알 수 있음
+rewrite = 주소창은 안바뀜. 내가 c로 가서 c의 응답을 내줌. 주소창은 그대로 a
+
+pnpm add -D prettier eslint-config-prettier
+package.json > scripts
+"format": "prettier --check --ignore-path .gitignore .",
+"format:fix": "prettier --write --ignore-path .gitignore ."
+
+.eslintrc.json > extends
+prettier
+
+.prettierrc 파일 생성
+next slide 참고
+
+pnpm add -D @trivago/prettier-plugin-sort-imports
+prettierrc에 추가할 내용 슬라이드 참고

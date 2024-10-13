@@ -41,7 +41,7 @@ const Body = ({ children }: { children: ReactNode }) => {
 };
 
 type Props = {
-  friend: number;
+  friend?: number;
 };
 
 export type MyHandler = {
@@ -55,7 +55,7 @@ type PlaceUser = {
   email: string;
 };
 
-function Hello({ friend }: Props, ref: ForwardedRef<MyHandler>) {
+function Hello({ friend = 10 }: Props, ref: ForwardedRef<MyHandler>) {
   //   const [myState, setMyState] = useState(() => new Date().getTime());
   const {
     session: { loginUser },

@@ -6,6 +6,10 @@ import { SessionProvider } from './hooks/session-context';
 import useToggle from './hooks/toggle';
 import { useDebounce } from './hooks/timer-hooks';
 import Button from './components/atoms/Button';
+import Nav from './Nav';
+import { Route, Routes } from 'react-router-dom';
+import Login from './components/Login';
+import { NotFound } from './NotFound';
 
 const ColorTitle = ({
   color,
@@ -69,6 +73,16 @@ function App() {
       </div> */}
       <hr />
       <SessionProvider>
+        <Nav />
+        <Routes>
+          {/* <Route path='/' element={<Home />} /> */}
+          <Route path='/login' element={<Login />} />
+          <Route path='/my' element={<My />} />
+          {/* <Route path='/items' element={<Items />} /> */}
+          {/* <Route path='/items/:id' element={<ItemDetail />} /> */}
+          <Route path='/hello' element={<Hello />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
         <div className='mt-3 w-64'>
           <input
             type='number'
