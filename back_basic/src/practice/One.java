@@ -10,6 +10,7 @@ public class One {
 
 	private static void scanTemp() {
 		final int currTemp = 20;
+		System.out.println(currTemp + 30);
 		Scanner scan = new Scanner(System.in);
 		System.out.println("수심: ");
 		int deep = scan.nextInt();
