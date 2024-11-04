@@ -1,5 +1,13 @@
 public class Hello {
+	private static int x;
+
+	// public static int getId(); // 이런식으로 만들어놔야  내부에서 Hello.getId로 접근 가능. 그냥 getId는 안됨.static은 Hello.getId
+
 	public static void main(String[] args) {
+		Hello.x = 999;
+		Hello hello = new Hello();
+		// System.out.println("hello.x = " + hello.x);;
+		System.out.println("Hello.x = " + Hello.x);
 		System.out.println("Hello~");
 		String s1 = "abc";
 		String s2 = "def";
