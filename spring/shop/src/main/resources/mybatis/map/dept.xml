@@ -2,11 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.hana4.shop.dao.DeptDAO">
+    <insert id="insertDept" parameterType="com.hana4.shop.dto.DeptDTO">
+        INSERT INTO Dept (pid, dname, captain)
+        VALUES (#{pid}, #{dname}, #{captain})
+    </insert>
+
+    <update id="updateDept" parameterType="com.hana4.shop.dto.DeptDTO">
+        UPDATE Dept
+        SET pid = #{pid},
+        dname = #{dname},
+        captain = #{captain}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteDept" parameterType="int">
+        WITH RECURSIVE SubDepts AS (
+        SELECT id FROM Dept WHERE id = #{deptId}
+        UNION ALL
+        SELECT d.id FROM Dept d INNER JOIN SubDepts sd ON d.pid = sd.id
+        )
+        DELETE FROM Dept WHERE id IN (SELECT id FROM SubDepts);
+    </delete>
+
+    <select id="getDeptById" parameterType="int" resultType="com.hana4.shop.dto.DeptDTO">
+        SELECT id, pid, dname, captain
+        FROM Dept
+        WHERE id = #{deptId}
+    </select>
+
     <!--    <select id="getDepartmentHierarchy" resultType="com.hana4.shop.dto.DeptDTO" statementType="PREPARED">-->
     <!--        select *-->
     <!--        from Dept-->
     <!--    </select>-->
-    <select id="getDepartmentHierarchy" resultType="com.hana4.shop.dto.DeptDTO">
+    <select id="getDepartmentHierarchy" resultType="com.hana4.shop.dto.DeptHierarchyDTO">
         WITH RECURSIVE CteDept(id, pid, dname, depth, h, captain) AS (
         SELECT id, pid, dname, 0, CAST(id AS CHAR(10)), captain
         FROM Dept
@@ -20,9 +48,10 @@
         /*+ SET_VAR(cte_max_recursion_depth = 20) */
         CONCAT(REPEAT('↳', c.depth), ' ', c.dname) AS hierarchy,
         c.depth,
-        c.id AS dept_id,
-        c.captain AS captain_id,
-        e.ename AS captain_name
+        c.id AS deptId,
+        c.captain AS captainId,
+        e.ename AS captainName,
+        c.dname
         FROM CteDept c
         LEFT JOIN Emp e ON c.captain = e.id
         ORDER BY c.h;

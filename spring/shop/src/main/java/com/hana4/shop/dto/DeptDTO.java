@@ -6,35 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DeptDTO {
-	// private int id;
-	// private int pid;
-	// private String dname;
-	// private int captain;
-	//
-	// @Override
-	// public String toString() {
-	// 	return "DeptDTO{" +
-	// 		"id=" + id +
-	// 		", pid=" + pid +
-	// 		", dname='" + dname + '\'' +
-	// 		", captain=" + captain +
-	// 		'}';
-	// }
-
-	private String hierarchy;
-	private int depth;
-	private Long deptId;
-	private Long captainId;
-	private String captainName;
-
-	@Override
-	public String toString() {
-		return "DeptDTO{" +
-			"hierarchy='" + hierarchy + '\'' +
-			", depth=" + depth +
-			", deptId=" + deptId +
-			", captainId=" + captainId +
-			", captainName='" + captainName + '\'' +
-			'}';
-	}
+	private Integer id;         // 부서 ID
+	private Integer pid;      // 부서장 ID
+	private String dname;       // 부서명
+	private Integer captain;
 }

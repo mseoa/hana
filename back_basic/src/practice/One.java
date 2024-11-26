@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class One {
 	public static void main(String[] args) {
 		// scanUserInfo();
-		scanTemp();
+		scanUserInfo();
 	}
 
 	private static void scanTemp() {

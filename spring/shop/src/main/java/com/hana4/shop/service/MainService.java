@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.hana4.shop.dao.CustDAO;
 import com.hana4.shop.dao.DeptDAO;
+import com.hana4.shop.dao.EmpDAO;
 import com.hana4.shop.dto.CustDTO;
 import com.hana4.shop.dto.DeptDTO;
+import com.hana4.shop.dto.DeptHierarchyDTO;
+import com.hana4.shop.dto.EmpDTO;
 
 @Service
 public class MainService {
@@ -16,10 +19,12 @@ public class MainService {
 
 	private final CustDAO custDAO;
 	private final DeptDAO deptDAO;
+	private final EmpDAO empDAO;
 
-	public MainService(CustDAO custDAO, DeptDAO deptDAO) {
+	public MainService(CustDAO custDAO, DeptDAO deptDAO, EmpDAO empDAO) {
 		this.custDAO = custDAO;
 		this.deptDAO = deptDAO;
+		this.empDAO = empDAO;
 	}
 
 	// public MainService(CustDAO dao) {
@@ -60,7 +65,27 @@ public class MainService {
 		custDAO.delete(id);
 	}
 
-	public List<DeptDTO> getDepartmentHierarchy() {
+	public List<DeptHierarchyDTO> getDepartmentHierarchy() {
 		return deptDAO.getDepartmentHierarchy();
+	}
+
+	public List<EmpDTO> getAllEmployees() {
+		return empDAO.getAllEmployees();
+	}
+
+	public DeptDTO getDeptById(Integer deptId) {
+		return deptDAO.getDeptById(deptId);
+	}
+
+	public void updateDept(DeptDTO dept) {
+		deptDAO.updateDept(dept);
+	}
+
+	public void insertDept(DeptDTO dept) {
+		deptDAO.insertDept(dept);
+	}
+
+	public void deleteDept(int deptId) {
+		deptDAO.deleteDept(deptId);
 	}
 }
