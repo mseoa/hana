@@ -9,6 +9,14 @@ public class User {
 		this.name = name;
 	}
 
+	public User() {
+		this("");
+	}
+
+	public User(String name) {
+		this(0L, name);
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -23,5 +31,13 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+			"id=" + id +
+			", name='" + name + '\'' +
+			'}';
 	}
 }
